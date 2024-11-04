@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { Context } from "../store/AppContext.js";
-import ContactInfo from "../component/ContactInfo.js";
+import ContactCard from "../component/ContactCard.js";
 
-export const Contacts = () => {
+const Contacts = () => {
   const { store } = useContext(Context);
 
   return (
-    <div className="container">
+    <div>
       <div>
         {store.contacts.length === 0 ? (
           <div className="text-center alert alert-info" role="alert">
@@ -17,7 +17,7 @@ export const Contacts = () => {
       {store.contacts.map((contact) => {
         return (
           <div className="card mb-3" key={contact.id}>
-            <ContactInfo
+            <ContactCard
               name={contact.name}
               phone={contact.phone}
               address={contact.address}

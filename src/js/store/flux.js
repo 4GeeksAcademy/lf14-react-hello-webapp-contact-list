@@ -1,42 +1,42 @@
-const getState = ({ getStore, getActions, setStore }) => {
+const getState = ({ getStore, setStore, getActions }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			contactList: [],
+			idDelete: "",
+			contactToEdit: {}
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			getData: str => {
+				fetch("https://playground.4geeks.com/contact/agendas/lf14")
+					.then(res => res.json())
+					.then(data => setStore({ contactList: data }))
+					.catch(error => console.log(error));
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
+			addContact: user => {
+				fetch("https://playground.4geeks.com/contact/agendas/lf14/contacts", {
+					method: "POST", // or 'POST'
+					body: JSON.stringify(user), // data can be `string` or {object}!
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(res => res.json())
+					.then(response => console.log("Success:", response))
+					.catch(error => console.error("Error:", error));
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
+		
+			editContact: (id, contact) => {
+				fetch("https://playground.4geeks.com/contact/agendas/lf14/contacts/" + id, {
+					method: "PUT",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(contact)
+				})
+					.then(res => res.json())
+					.then(results => console.log(setStore({ contact: results })))
+					.catch(error => console.log("Error", error));
+			},
+			getContact: contact => {
+				setStore({ contactToEdit: contact });
 			}
 		}
 	};
